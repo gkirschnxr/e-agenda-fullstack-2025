@@ -7,3 +7,7 @@ public record CadastrarContatoRequest(
     string? Empresa, 
     string? Cargo
 );
+
+public record CadastrarContatoResponse(
+    Guid Id
+);
