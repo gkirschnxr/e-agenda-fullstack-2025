@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace eAgenda.WebApi.Controllers;
 
+// Ação (MVC) = Endpoint (Web API)
 [ApiController]
 [Route("[controller]")]
 public class ContatoController(IMediator mediator) : ControllerBase
@@ -29,7 +30,7 @@ public class ContatoController(IMediator mediator) : ControllerBase
         return Created(string.Empty, response);
     }
 
-    // Ação (MVC) = Endpoint (Web API)
+    
     [HttpGet]
     public async Task<ActionResult<SelecionarContatosResponse>> SelecionarRegistros(
         [FromQuery] SelecionarContatosRequest? request
@@ -43,6 +44,29 @@ public class ContatoController(IMediator mediator) : ControllerBase
         var response = new SelecionarContatosResponse(
             result.Value.Contatos.Count, 
             result.Value.Contatos
+        );
+
+        return Ok(response);
+    }
+
+    [HttpGet("{id:guid}")]
+    public async Task<ActionResult<SelecionarContatoPorIdResponse>> SelecionarRegistroPorId(
+        Guid id
+    ) {
+        var query = new SelecionarContatoPorIdQuery(id);
+
+        var result = await mediator.Send(query);
+
+        if (result.IsFailed) return NotFound(id);
+
+        var response = new SelecionarContatoPorIdResponse(
+            result.Value.Id,
+            result.Value.Nome,
+            result.Value.Telefone,
+            result.Value.Email,
+            result.Value.Empresa,
+            result.Value.Cargo,
+            result.Value.Compromissos
         );
 
         return Ok(response);
