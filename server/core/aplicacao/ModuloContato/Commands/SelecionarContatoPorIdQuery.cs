@@ -4,7 +4,6 @@ using System.Collections.Immutable;
 
 namespace eAgenda.Core.Aplicacao.ModuloContato.Commands;
 public record SelecionarContatoPorIdQuery(Guid Id) : IRequest<Result<SelecionarContatoPorIdResult>>;
-
 public record SelecionarContatoPorIdResult(
     Guid Id,
     string Nome,

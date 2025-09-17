@@ -30,6 +30,32 @@ public class ContatoController(IMediator mediator) : ControllerBase
         return Created(string.Empty, response);
     }
 
+    [HttpPut("id:guid")]
+    public async Task<ActionResult<EditarContatoResponse>> Editar(Guid id, EditarContatoRequest request) {
+        var command = new EditarContatoCommand(
+                id,
+                request.Nome,
+                request.Telefone,
+                request.Email,
+                request?.Empresa,
+                request?.Cargo
+        );
+
+        var result = await mediator.Send(command);
+
+        if (result.IsFailed) return BadRequest();
+
+        var response = new EditarContatoResponse(
+                result.Value.Nome,
+                result.Value.Telefone,
+                result.Value.Email,
+                result.Value.Empresa,
+                result.Value.Cargo
+        );
+
+        return Ok(response);
+    }
+
     
     [HttpGet]
     public async Task<ActionResult<SelecionarContatosResponse>> SelecionarRegistros(
