@@ -31,7 +31,10 @@ public class ContatoController(IMediator mediator) : ControllerBase
     }
 
     [HttpPut("id:guid")]
-    public async Task<ActionResult<EditarContatoResponse>> Editar(Guid id, EditarContatoRequest request) {
+    public async Task<ActionResult<EditarContatoResponse>> Editar(
+        Guid id, 
+        EditarContatoRequest request
+    ) {
         var command = new EditarContatoCommand(
                 id,
                 request.Nome,
@@ -55,6 +58,20 @@ public class ContatoController(IMediator mediator) : ControllerBase
 
         return Ok(response);
     }
+
+    [HttpDelete("id:guid")]
+    public async Task<ActionResult<ExcluirContatoResponse>> Excluir(
+        Guid id
+    ) {
+        var command = new ExcluirContatoCommand(id);
+
+        var result = await mediator.Send(command);
+
+        if (result.IsFailed) return BadRequest();
+
+        return NoContent();
+    }
+
 
     
     [HttpGet]
